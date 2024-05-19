@@ -1,7 +1,8 @@
 import os
 from pony.orm import db_session
 from datetime import datetime
-from src.db_models import Project, Interview, db
+from src.data.models import Project, Interview, db
+from src.paths import PATH_TO_DATA
 
 
 @db_session
@@ -32,5 +33,6 @@ def add_interviews_from_folder(project_name, folder_path):
 
 if __name__ == '__main__':
     project_name = 'test'
-    folder_path = '../data/raw/test_interviews'
+    folder_path = f'{PATH_TO_DATA}/raw/test_interviews'
     add_interviews_from_folder(project_name, folder_path)
+

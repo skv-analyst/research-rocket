@@ -1,5 +1,6 @@
 from pony.orm import Database, Required, Set, Optional, PrimaryKey
 from datetime import datetime
+from src.paths import PATH_TO_DATA
 
 # Creating a database object
 db = Database()
@@ -28,6 +29,7 @@ class LLMAnswer(db.Entity):
     _table_ = "llm_answers"
     id = PrimaryKey(int, auto=True)
     interview = Required(Interview)  # Each answer is associated with one interview
+    analysis_step = Required(int)   # The interview analysis step
     created = Required(datetime, default=datetime.now)  # Date and time the response was created
     model = Required(str)  # Name of the LLM model
     input_tokens = Required(int)  # Number of input tokens
@@ -38,7 +40,7 @@ class LLMAnswer(db.Entity):
 
 
 # Connecting to the SQLite database
-db.bind('sqlite', '../data/db.sqlite', create_db=True)
+db.bind('sqlite', f'{PATH_TO_DATA}/db.sqlite', create_db=True)
 
 # Generating tables in the database
 db.generate_mapping(create_tables=True)
