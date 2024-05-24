@@ -208,7 +208,7 @@ def main(project_id):
     )
 
     all_interviews = get_all_interviews_project(project_id)
-    sliced_data = islice(all_interviews.items(), 2, 3, 1)  # islice(iterable, start, stop[, step])
+    sliced_data = islice(all_interviews.items(), 3, None, 1)  # islice(iterable, start, stop[, step])
 
     for i, (interview_id, interview_data) in enumerate(tqdm(sliced_data)):
         processor = LLMProcessor(
