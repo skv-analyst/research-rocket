@@ -1,2 +1,0 @@
-2024-05-22T22:45:19.445358+0300 | ERROR | file: compress_interview.py | module: compress_interview | func: get_response_json | Expecting ',' delimiter: line 12 column 33 (char 1482)
-2024-05-22T22:45:19.447689+0300 | ERROR | file: compress_interview.py | module: compress_interview | func: process_steps | Attribute LLMAnswer.answer_clear is required

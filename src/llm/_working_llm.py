@@ -13,13 +13,13 @@ from datetime import datetime
 from loguru import logger
 from tqdm import tqdm
 
-logger.add("logs/project.log", level="DEBUG", rotation="100 MB", retention="7 days",
-           format="{time} | {level} | file: {file} | module: {module} | func: {function} | {message}")
+# logger.add("logs/project.log", level="DEBUG", rotation="100 MB", retention="7 days",
+#            format="{time} | {level} | file: {file} | module: {module} | func: {function} | {message}")
 
-load_dotenv()
+# load_dotenv()
 
-encoding = tiktoken.get_encoding("cl100k_base")
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+# encoding = tiktoken.get_encoding("cl100k_base")
+# ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 
 questions = {
     1: {

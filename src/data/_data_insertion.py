@@ -32,7 +32,7 @@ def add_interviews_from_folder(project_name, folder_path):
 
 
 if __name__ == '__main__':
-    project_name = 'real_estate_test'
+    project_name = 'test_real_estate_2'
     folder_path = f'{PATH_TO_DATA}/raw/test_interviews'
     add_interviews_from_folder(project_name, folder_path)
 
