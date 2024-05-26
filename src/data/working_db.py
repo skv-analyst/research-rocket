@@ -5,14 +5,6 @@ from pony.orm import db_session, select
 from src.data.models import Project, Interview, LLMAnswer, LLMAnswerMerged, db
 from src.paths import PATH_TO_FONT, ROOT_DIR
 
-from pprint import pformat
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_CENTER
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.pdfbase import pdfmetrics
-
 
 @db_session
 def sav_interview_files_to_database(project_name: str = None, folder_path: str = None,
