@@ -87,4 +87,4 @@ class PrepareInterviewForSummary:
 
 
 if __name__ == "__main__":
-    PrepareInterviewForSummary(project_name="test_real_estate_2")
+    ...

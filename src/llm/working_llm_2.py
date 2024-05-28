@@ -108,4 +108,4 @@ class LlmProcessProject:
 
 
 if __name__ == "__main__":
-    LlmProcessInterview(project_name="test_real_estate_2", questions=INTERVIEW_QUESTIONS)
+    ...
