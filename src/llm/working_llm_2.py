@@ -104,7 +104,67 @@ class LlmProcessInterview:
 
 
 class LlmProcessProject:
-    pass
+    def __init__(self, project_name: str = None, all_llm_answers_interviews: str = None, questions: dict = None):
+        self.project_name = project_name
+        self.all_llm_answers_interviews = all_llm_answers_interviews
+        self.questions = questions
+        self.project_id = db.read_db(
+            "SELECT DISTINCT id FROM projects WHERE name = $name", {"name": project_name}
+        )[0]
+        self.previous_answers = {}
+
+    def create_prompt(self, text_template: str = None, input_variables: list = None):
+        ru_lang = "\nВнимание, это важно! Всегда отправляйте полный текст ответа только на русском языке. Спасибо!"
+
+        prompt = PromptTemplate(template=text_template + ru_lang,
+                                input_variables=input_variables)
+
+        return prompt
+
+    def run(self):
+        for question, parameters in tqdm(sorted(self.questions.items())):
+            prompt = self.create_prompt(text_template=parameters["text_template"],
+                                        input_variables=parameters["input_variables"])
+
+            if parameters["llm_temperature"] is False:
+                chain = prompt | ChatAnthropic(api_key=LLM_API_KEY,
+                                               model=LLM_MODEL,
+                                               max_tokens=4096,
+                                               temperature=LLM_DEFAULT_TEMPERATURE)
+            else:
+                chain = prompt | ChatAnthropic(api_key=LLM_API_KEY,
+                                               model=LLM_MODEL,
+                                               max_tokens=4096,
+                                               temperature=parameters["llm_temperature"])
+
+            if parameters["previous_answers"] is True:
+                previous_answers = self.previous_answers[question - 1]
+            else:
+                previous_answers = None
+
+            try:
+                response = chain.invoke(
+                    {"raw_interview": self.all_llm_answers_interviews, "previous_answers": previous_answers})
+                metadata, content = llm_response_to_json(response)
+                self.previous_answers[question] = content
+
+                db.save_to_db(table_name="llm_answers_merged",
+                              project=self.project_id,
+                              created=datetime.now(),
+                              model=str(metadata["model"]),
+                              input_tokens=int(metadata["input_tokens"]),
+                              output_tokens=int(metadata["output_tokens"]),
+                              merged_interview=str(self.all_llm_answers_interviews),
+                              prompt=str(prompt),
+                              answer_full=str(response),
+                              answer_clear=content,
+                              answer_content=str(response.content)
+                              )
+
+                time.sleep(30)
+
+            except Exception as e:
+                logger.error(e)
 
 
 if __name__ == "__main__":

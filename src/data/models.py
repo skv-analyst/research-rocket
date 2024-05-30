@@ -50,7 +50,8 @@ class LLMAnswerMerged(db.Entity):
     merged_interview = Required(Json)                   # The results of all interviews of the project
     prompt = Required(str)                              # Request text
     answer_full = Required(str)                         # Full text of the response llm
-    answer_clear = Required(Json)                       # Cleared response text
+    answer_clear = Optional(Json)                       # Cleared response text
+    answer_content = Required(str)
 
 
 # Connecting to the SQLite database
