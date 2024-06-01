@@ -10,7 +10,6 @@ from langchain_anthropic import ChatAnthropic
 from langchain.prompts import PromptTemplate
 from src.paths import PATH_TO_LOG
 from src.data import working_db_2 as db
-from src.llm.prompt_templates import INTERVIEW_QUESTIONS, SUMMARY_QUESTIONS
 
 load_dotenv()
 logger.add(f"{PATH_TO_LOG}/project.log", level="DEBUG", rotation="100 MB", retention="7 days",
