@@ -6,7 +6,7 @@ from src.etl import working_pdf as pdf
 
 
 def main(project_name: str, save_files, process_interviews, process_project: bool, ) -> None:
-    # Step 1. Adding a project and an interview to the database.
+    # 01. Adding a project and an interview to the database.
     if save_files:
         db.save_to_db(table_name="projects", project_name=project_name)
         db.save_files_to_db(project_name=project_name)
@@ -15,28 +15,29 @@ def main(project_name: str, save_files, process_interviews, process_project: boo
         "SELECT DISTINCT project_id FROM projects WHERE project_name = $name", {"name": project_name}
     )[0]
 
-    # Step 2. Processing all interviews in the project.
+    # 02. Processing all interviews in the project.
     if process_interviews:
         llm.LlmProcessingInterview(project_id=project_id, project_name=project_name,
                                    questions=INTERVIEW_QUESTIONS).run()
 
-    # Step 3. Transformation of all answers for all interviews of the project into one structured line.
+    # 03. Transformation of all answers for all interviews of the project into one structured line.
     all_llm_answer_interviews = etl.PrepareInterviewForSummary(project_id=project_id).run()
     # print(all_llm_answer_interviews)
 
-    # Step 4. Getting the final sammari based on the results of all interviews of the project.
+    # 04. Getting the final summary based on the results of all interviews of the project.
     if process_project:
         llm.LlmProcessingProject(project_id=project_id, all_llm_answers=all_llm_answer_interviews,
                                  questions=SUMMARY_QUESTIONS).run()
 
-    # Step 5. Converting the final sammari into a structured string.
+    # 05. Converting the final sammari into a structured string.
     summary_llm_answer = etl.UnpackingSummary(project_id=project_id, project_name=project_name).run()
     # print(summary_llm_answer)
 
-    # Step 6. Saving the data in pdf-file.
-    pdf.CreatePdf(project_name=project_name, text=summary_llm_answer).run()
+    # 06. Saving the data in pdf-file.
+    pdf.CreatePdf(project_name=project_name, pdf_type="summary", text=summary_llm_answer).run()
+    pdf.CreatePdf(project_name=project_name, pdf_type="interviews", text=all_llm_answer_interviews).run()
 
 
 if __name__ == "__main__":
     name = "test_real_estate_02"
-    main(project_name=name, save_files=True, process_interviews=True, process_project=True)
+    main(project_name=name, save_files=False, process_interviews=False, process_project=False)

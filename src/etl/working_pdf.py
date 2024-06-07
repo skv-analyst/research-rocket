@@ -7,10 +7,11 @@ logger.add(f"{PATH_TO_LOG}/project.log", level="DEBUG", rotation="100 MB", reten
 
 
 class CreatePdf:
-    def __init__(self, project_name, text: str):
+    def __init__(self, project_name, pdf_type, text: str):
         self.project_name = project_name
+        self.pdf_type = pdf_type
         self.text = text
-        self.file = f"{PATH_TO_DATA}/raw/{self.project_name}/{self.project_name}.pdf"
+        self.file = f"{PATH_TO_DATA}/raw/{self.project_name}/{self.project_name}_{self.pdf_type}.pdf"
         self.font = f"{PATH_TO_FONT}/DejaVuSans.ttf"
 
     def run(self):
