@@ -115,25 +115,67 @@ class UnpackingSummary:
                 "reflections|results|unexpected|hypothesis|alternatives|additionals")
         pattern = re.compile(fr"<({tags})>\s*(.*?)\s*</\1>", re.DOTALL)
 
-        # results = ""
-        # for index, interview in enumerate(self.latest_llm_answers):
+        results = f"ИТОГОВЫЕ РЕЗУЛЬТАТЫ ПО ПРОЕКТУ {self.project_name}"
+        content_dict = {}
         matches = pattern.findall(self.latest_llm_answers[0])
 
-        results = f"ИТОГОВЫЕ РЕЗУЛЬТАТЫ ПО ПРОЕКТУ {self.project_name}"
-        for tag, content in matches:
-            processed_content = process_text(content)
-            if tag in ("keywords", "codes"):
-                results += f"\n{self.replace[tag]}\n{processed_content}\n"
-            elif tag in ("code_connections", "code_groups"):
-                results += f"\n{self.replace[tag]}\n{processed_content}\n"
-            elif tag in ("problems"):
-                results += f"\n{self.replace[tag]}\n{processed_content}\n"
-            elif tag in ("problem_connections", "problem_groups"):
-                results += f"\n{self.replace[tag]}\n{processed_content}\n"
-            elif tag in ("reflections", "results", "unexpected", "hypothesis", "alternatives", "additionals"):
-                results += f"\n{self.replace[tag]}\n{processed_content}\n"
+        for match in matches:
+            content_dict[match[0]] = f"\n{match[1]}\n"
+
+        # 1. Общие выводы ->  "Анализ проблем:" == <results>
+        if "results" in content_dict:
+            results += content_dict["results"]
+        # 2. Проблемы обозначенные в интервью -> "Проблемы обозначенные в интервью:" == <problems>
+        if "problems" in content_dict:
+            results += content_dict["problems"]
+        # 3. Анализ проблем(рефлексия) -> "Проблемы и частота их появления:" == <reflections>
+        if "reflections" in content_dict:
+            results += content_dict["reflections"]
+        # 4. Взаимосвязи обозначенных проблем -> "Взаимосвязи обозначенных проблем:" == <problem_connections>
+        if "problem_connections" in content_dict:
+            results += content_dict["problem_connections"]
+        # 5. Группировка обозначенных проблем -> "Группировка обозначенных проблем:" == <problem_groups>
+        if "problem_groups" in content_dict:
+            results += content_dict["problem_groups"]
+        # 6. Проблемы и частота их появления -> ???
+        # 7. Неожиданные закономерности в ответах -> "Неожиданные закономерности в ответах:" == <unexpected>
+        if "unexpected" in content_dict:
+            results += content_dict["unexpected"]
+        # 8. Гипотезы возникновения проблем -> "Гипотезы возникновения проблем:" == <hypothesis>
+        if "hypothesis" in content_dict:
+            results += content_dict["hypothesis"]
+        # 9. Альтернативные объяснения проблем -> "Альтернативные объяснения проблем:" == <alternatives>
+        if "alternatives" in content_dict:
+            results += content_dict["alternatives"]
+        # 10. Дополнительные исследования -> "Дополнительные исследования:" == <additionals>
+        if "additionals" in content_dict:
+            results += content_dict["additionals"]
+        # 11. Кодирование интервью и примеры цитат к кодам -> "Кодирование интервью:" == <codes>.
+        if "codes" in content_dict:
+            results += content_dict["codes"]
+        # 12. Взаимосвязи кодов -> "Взаимосвязи кодов:" == <code_connections>
+        if "code_connections" in content_dict:
+            results += content_dict["code_connections"]
+        # 13. Группировка кодов -> "Группировка кодов:" == <code_groups>
+        if "code_groups" in content_dict:
+            results += content_dict["code_groups"]
+        # 14. Не тащим в итоговое саммари по проекту -> "Ключевые фразы интервью:" == <keywords>
+
+        # for tag, content in matches:
+        #     processed_content = process_text(content)
+        #     if tag in ("keywords", "codes"):
+        #         results += f"\n{self.replace[tag]}\n{processed_content}\n"
+        #     elif tag in ("code_connections", "code_groups"):
+        #         results += f"\n{self.replace[tag]}\n{processed_content}\n"
+        #     elif tag in ("problems"):
+        #         results += f"\n{self.replace[tag]}\n{processed_content}\n"
+        #     elif tag in ("problem_connections", "problem_groups"):
+        #         results += f"\n{self.replace[tag]}\n{processed_content}\n"
+        #     elif tag in ("reflections", "results", "unexpected", "hypothesis", "alternatives", "additionals"):
+        #         results += f"\n{self.replace[tag]}\n{processed_content}\n"
 
         return results
+
 
 
 if __name__ == "__main__":
