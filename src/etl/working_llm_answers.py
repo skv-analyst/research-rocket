@@ -129,8 +129,8 @@ class UnpackingSummary:
         if "problems" in content_dict:
             results += content_dict["problems"]
         # 3. Анализ проблем(рефлексия) -> "Проблемы и частота их появления:" == <reflections>
-        if "reflections" in content_dict:
-            results += content_dict["reflections"]
+        # if "reflections" in content_dict:
+        #     results += content_dict["reflections"]
         # 4. Взаимосвязи обозначенных проблем -> "Взаимосвязи обозначенных проблем:" == <problem_connections>
         if "problem_connections" in content_dict:
             results += content_dict["problem_connections"]
