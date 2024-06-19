@@ -39,5 +39,5 @@ def main(project_name: str, save_files, process_interviews, process_project: boo
 
 
 if __name__ == "__main__":
-    name = "test_galina_04_upd_prompt"
+    name = "test_vk_02"
     main(project_name=name, save_files=True, process_interviews=True, process_project=True)
